@@ -1,0 +1,42 @@
+class CuentaCorreo:
+    """Clase que representa las credenciales de una cuenta de correo electrónico."""
+
+    def __init__(self, usuario: str, password: str):
+        # Atributos de instancia
+        self.usuario = usuario
+        self.password = password
+
+    def mostrar_info(self) -> None:
+        """Muestra la información y el estado actual de la cuenta."""
+        print(f"📧 Usuario : {self.usuario}")
+        print(f"🔑 Password: {'*' * len(self.password)}")  # Enmascara la contraseña por seguridad
+
+
+# --- Prueba y Ejecución ---
+if __name__ == "__main__":
+    # Creación del objeto (instanciación)
+    mi_cuenta = CuentaCorreo(
+        usuario="andy.biersack@correo.com", 
+        password="Slipknot1234."
+    )
+
+    # Invocación del método
+    mi_cuenta.mostrar_info()
+
+
+
+  # ============================================================
+# 4. PRUEBA DEL CÓDIGO (Instanciación)
+# ============================================================
+
+# Crea un objeto llamado 'mi_bandeja' con tu nombre y capacidad máxima de 2 correos
+mi_bandeja = BandejaCorreo("Athziri", 4)
+
+
+# Prueba recibir 3 correos seguidos para ver si funciona el límite
+mi_bandeja.recibir_correo("carlos@gmail.com")
+mi_bandeja.recibir_correo("ana@gmail.com")
+mi_bandeja.recibir_correo("promociones@uber.com")  # Este debería rebotar por bandeja llena
+
+# Llama al método para ver el estado final de tu bandeja
+mi_bandeja.ver_estado()
