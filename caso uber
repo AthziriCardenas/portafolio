@@ -1,0 +1,144 @@
+# ============================================
+# EJERCICIO: Identifica Clase, Métodos y Objetos
+# Instrucción: Escribe comentarios al lado de cada parte
+# indicando si es CLASE, MÉTODO u OBJETO.
+# ============================================
+
+class VehiculoUber:                          # ← ¿Qué es esto? Clase
+    
+    def __init__(self, placas, conductor, modelo_auto, ubicacion_gps, calificacion):
+        self.placas = placas
+        self.conductor = conductor
+        self.modelo_auto = modelo_auto
+        self.ubicacion_gps = ubicacion_gps
+        self.disponible = True
+        self.calificacion = calificacion
+
+    def actualizar_gps(self, nuevas_coordenadas):   # ← ¿Qué es esto? Metodo
+        self.ubicacion_gps = nuevas_coordenadas
+        print(f"{self.conductor} ahora está en: {self.ubicacion_gps}")
+
+    def aceptar_viaje(self):                        # ← ¿Qué es esto? Metodo
+        self.disponible = False
+        print(f"{self.conductor} aceptó un viaje. Ya no está disponible.")
+
+    def bloquear_por_seguridad(self):               # ← ¿Qué es esto? Metodo
+        self.disponible = False
+        print(f"⚠️ ALERTA: El vehículo de {self.conductor} ha sido bloqueado por seguridad.")
+
+
+
+
+auto_juan = VehiculoUber(                           # ← ¿Qué es esto? objeto
+    "JAL-9876", 
+    "Juan Pérez", 
+    "Chevrolet Aveo", 
+    "Av. Vallarta y Américas", 
+    4.9
+)
+
+auto_maria = VehiculoUber(                          # ← ¿Qué es esto? objeto
+    "JMX-4321", 
+    "María Torres", 
+    "Toyota Yaris", 
+    "Centro de Tlaquepaque", 
+    4.75
+)
+
+auto_alerta = VehiculoUber(                         # ← ¿Qué es esto? objeto
+    "LMN-5555", 
+    "Carlos R.", 
+    "Nissan Sentra", 
+    "Anillo Periférico Sur", 
+    3.2
+)
+
+
+# --- Prueba de métodos (opcional) ---
+#auto_juan.actualizar_gps("Av. Vallarta 1500")
+#auto_juan.aceptar_viaje()
+#auto_alerta.bloquear_por_seguridad()
+
+
+
+  ATHZIRI METZI CARDENAS SANCHEZ
+🚗Contexto del Problema: Imagina que trabajas en el equipo de tecnología de Uber. Hay miles
+de conductores activos simultáneamente en Guadalajara. Si la plataforma tuviera que programar
+un código independiente para cada automóvil, el sistema colapsaría.
+Para resolverlo, los ingenieros crearon una Clase base (el molde general) llamada
+VehiculoUber. Cada vez que un conductor enciende su aplicación, el servidor genera un Objeto
+real (una instancia real) (una instancia real) a partir de esa clase.
+.
+PARTE 1 – El Molde (Clase: VehiculoUber)
+Analiza la estructura de la clase base y sus dos componentes principales:
+Atributos (Datos / Estado) Métodos (Acciones)
+● placas
+● conductor
+● modelo_auto
+● ubicacion_gps
+● disponible
+● calificacion
+
+● actualizar_gps(nuevas_coordenadas)
+● aceptar_viaje()
+● finalizar_viaje()
+● bloquear_por_seguridad()
+
+PARTE 2 – Instanciación (Creación de 3 Objetos Reales)
+Completa los datos faltantes en las líneas y redacta una oración corta indicando el estado en el
+que se encuentra cada auto.
+1. Objeto: auto_juan
+● placas: ________”JKM-4587”______________
+● conductor: "Juan Pérez"
+● modelo_auto: "Chevrolet Aveo"
+● ubicacion_gps: "Av. Vallarta y Américas"
+● disponible: True
+● calificacion: 4.9
+Estado actual: “Auto activo en buenas condiciones y ya calificado para poder recibir el viaje”
+
+2. Objeto: auto_maria
+● placas: “JHL-8954”
+● conductor: “Maria Gutierez”
+● modelo_auto: “Hyundai”
+● ubicacion_gps: “Av. Chapultepec y Hidalgo”
+● disponible: False
+● calificacion: 5
+Estado actual: El auto está ocupado realizando un viaje en curso por lo que no puede recibir
+nuevos servicios.
+3. Objeto: auto_alerta (Vehículo Reportado)
+● placas: "JGH-6974 "
+● conductor: "Carlos R."
+● modelo_auto: "Nissan Sentra"
+● ubicacion_gps: "Anillo Periférico Sur"
+● disponible: False
+● calificacion: 2.2
+Estado actual: El auto está fuera de servicio por una alerta de seguridad activa y tiene baja
+calificación.
+PARTE 3 – Simulación de Eventos y Razonamiento Logístico
+Responde las preguntas analizando cómo interactúan los métodos con los atributos de cada
+objeto:
+1. Evento de Movimiento: Juan Pérez avanza 3 calles hacia el norte.
+○ Método que se ejecuta: actualizar_gps(nuevas_coordenadas)
+○ Atributo que cambia únicamente en auto_juan: auto_juan: ubicacion_gps
+○ ¿Cambia algo en el objeto auto_maria? □ Sí □ No
+○ ¿Por qué?: Porque cada objeto es una instancia independiente en la memoria; las
+modificaciones en los atributos de un objeto no afectan los datos de los demás.
+2. Evento de Seguridad: El pasajero que viaja con Carlos R. presiona el botón de pánico en su app. El
+servidor ejecuta de inmediato bloquear_por_seguridad() sobre el objeto auto_alerta.
+○ ¿Qué atributos de auto_alerta cambian o deberían cambiar tras el bloqueo?: El atributo
+disponible pasa obligatoriamente a False (y opcionalmente un atributo de estado o bloqueo
+de cuenta)
+○ ¿El bloqueo afecta a auto_juan y a auto_maria si los tres nacieron del mismo molde
+(VehiculoUber)?:
+○ No los afecta. Cada objeto opera de manera encapsulada; ejecutar un método sobre
+
+auto_alerta solo modifica el estado interno de esa instancia en particular.0
+3. Reflexión sobre Abstracción y Mantenimiento:
+Uber necesita actualizar la app para medir el porcentaje de batería del teléfono del conductor y
+prevenir desconexiones. Quiere integrar la variable nivel_bateria_telefono.
+○ ¿Dónde debe agregarse este nuevo parámetro?:
+□ Directamente en la clase base VehiculoUber.
+□ Manualmente, uno por uno, en cada objeto (auto_juan, auto_maria, etc.).
+○ Explica tu respuesta : Todos los objetos recién creados derivados de la clase base heredarán
+automáticamente el atributo level_bateria_telefono. Esto evita la duplicación y garantiza un
+mantenimiento eficaz en sistemas con millones de instancias.
