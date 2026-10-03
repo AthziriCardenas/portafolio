@@ -1,0 +1,56 @@
+# Construye una clase UsuarioApp que contenga un atributo correo_inicial
+class UsuarioApp:
+    def __init__(self, correo_inicial):
+        # Guarda en self.correo el valor de correo_inicial (atributo debe ser privado)
+        self.__correo = correo_inicial 
+
+    # 1. El GETTER (Lleva @property y el nombre que quieres usar)
+    @property
+    def correo(self):
+        return self.__correo
+
+    # 2. El SETTER (Lleva @nombre.setter y recibe el nuevo valor)
+    @correo.setter
+    def correo(self, nuevo_correo):
+        self.__correo = nuevo_correo
+
+
+# === Test ===
+usuario = UsuarioApp("andybiersack@mail.com")
+
+print(usuario.correo)         # Llama al getter (muestra: juan@mail.com)
+
+usuario.correo = "loganhenderson@mail.com"  # Llama al setter (cambia el valor)
+print(usuario.correo)         # Llama al getter (muestra: pedro@mail.com)
+
+class CuentaCorreo:
+    def __init__(self, usuario, password):
+        self.usuario = usuario
+        self.__password = password  # Atributo Privado
+
+    # GETTER: Lee el atributo privado de forma segura
+    def get_password(self):
+        return self.__password
+
+    # SETTER: Modifica el atributo aplicando validación
+    def set_password(self, nueva_password):
+        if len(nueva_password) >= 6:
+            self.__password = nueva_password
+            print("Contraseña actualizada con éxito.")
+        else:
+            print("❌ Error: La contraseña debe tener al menos 6 caracteres.")
+
+# --- PRUEBA CON MÉTODOS SEGUROS ---
+mi_cuenta = CuentaCorreo("jose@gmail.com", "123456")
+
+# 1. Intentamos cambiarla por una contraseña muy corta (el Setter la rechaza)
+mi_cuenta.set_password("abcabc")
+# Salida: ❌ Error: La contraseña debe tener al menos 6 caracteres.
+
+# 2. Cambiamos la contraseña por una válida
+mi_cuenta.set_password("claveSegura2026")
+# Salida: Contraseña actualizada con éxito.
+
+# 3. Consultamos la contraseña utilizando el Getter
+print("Contraseña actual:", mi_cuenta.get_password())
+# Salida: Contraseña actual: claveSegura2026
