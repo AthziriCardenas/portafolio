@@ -1,0 +1,17 @@
+print(f"Huésped: {self.cliente}\nHabitación: {self.numero_habitacion}\nNoches: {self.noches}\nEstado: {estado}\n")
+
+
+# 4. Pruebas con objetos independientes
+reserva1 = ReservaHotel("Andy Biersack", 134, 4, 1200.0)
+reserva2 = ReservaHotel("James Smith", 230, 7, 1500.0)
+reserva3 = ReservaHotel("Adam Carlsen", 450, 9, 950.0)
+
+# Demostración de funcionamiento
+reserva1.extender_estancia(2)
+reserva1.calcular_total()
+reserva1.procesar_pago()
+
+reserva2.calcular_total()
+
+reserva3.mostrar_detalle()
+reserva1.mostrar_detalle()
