@@ -1,0 +1,118 @@
+Código a analizar (léelo completo antes de responder)
+
+```python 
+
+class Persona:
+    def __init__(self, nombre, edad, **kwargs):
+        print("→ Entrando a Persona")
+        super().__init__(**kwargs)
+        self.nombre = nombre
+        self.edad = edad
+        print("← Saliendo de Persona")
+
+class Estudiante(Persona):
+    def __init__(self, universidad, semestre, **kwargs):
+        print("→ Entrando a Estudiante")
+        super().__init__(**kwargs)
+        self.universidad = universidad
+        self.semestre = semestre
+        print("← Saliendo de Estudiante")
+
+class Trabajador(Persona):
+    def __init__(self, empresa, salario, **kwargs):
+        print("→ Entrando a Trabajador")
+        super().__init__(**kwargs)
+        self.empresa = empresa
+        self.salario = salario
+        print("← Saliendo de Trabajador")
+
+class Pasante(Estudiante, Trabajador):
+    def __init__(self, nombre, edad, universidad, semestre, empresa, salario, horas_semana):
+        print("→ Entrando a Pasante")
+        self.horas_semana = horas_semana
+        super().__init__(
+            nombre=nombre,
+            edad=edad,
+            universidad=universidad,
+            semestre=semestre,
+            empresa=empresa,
+            salario=salario
+        )
+        print("← Saliendo de Pasante")
+
+# Creamos el objeto
+ana = Pasante(
+    nombre="Ana",
+    edad=21,
+    universidad="UNAM",
+    semestre=6,
+    empresa="Google",
+    salario=15000,
+    horas_semana=20
+)
+
+```
+
+
+### Preguntas de lectura (responde por escrito)
+
+1. **Predicción de salida**  
+    Escribe **exactamente** el orden de los print que van a aparecer cuando se ejecute el código (tanto las flechas de entrada como de salida).
+    Entrando a Pasante
+    Entrando a Estudiante
+    Entrando a Trabajador
+    Entrando a Persona
+    Saliendo de Persona
+    Saliendo de Trabajador
+    Saliendo de Estudiante
+    Saliendo de Pasante
+
+### 2. MRO (Method Resolution Ord
+1. **MRO**  
+    Escribe el Method Resolution Order completo de la clase Pasante.  
+    (Puedes usar Pasante.__mro__ ).
+    Pasante`
+    Estudiante`
+    Trabajador`
+    Persona`
+    object
+En Python se expresa como:
+[Pasante, Estudiante, Trabajador, Persona, object]
+1. **¿Quién llama a quién?**  
+    Explica con tus palabras:
+    - Cuando Pasante hace super().__init__(...), ¿a qué clase llama realmente?
+    Llama a la clase **`Estudiante`**, ya que es la siguiente clase definida en el MRO de `Pasante`
+    - ¿Por qué no llama directamente a Persona
+    En Python, `super()` no significa "llama a la clase padre inmediata según el código", sino "llama a la siguiente clase dentro de la lista del **MRO**". Como `Pasante` hereda primero de `Estudiante` y luego de `Trabajador`, el algoritmo C3 Linearization coloca a `Trabajador` antes de `Persona` para evitar inicializar dos veces a la clase base común.
+2. **El papel de **kwargs**  
+    En el momento en que se ejecuta el __init__ de Estudiante, ¿qué parámetros trae todavía el diccionario kwargs? 
+     Recibe como `**kwargs` los parámetros restantes destinados a las siguientes clases en la cadena:
+     `{'nombre': 'Ana', 'edad': 21, 'empresa': 'Google', 'salario': 15000}`
+
+_(Los parámetros `universidad` y `semestre` son capturados explícitamente por `Estudiante`)_.
+    ¿Y cuando llega a Trabajador?
+    Recibe como `**kwargs`:
+
+`{'nombre': 'Ana', 'edad': 21}`
+
+_(Los parámetros `empresa` y `salario` ya fueron consumidos por `Trabajador`)_.
+3. **Cambio de orden**  
+    Si cambiáramos la herencia a:  
+    class Pasante(Trabajador, Estudiante):  
+    ¿Cambiaría el orden de los print? ¿Por qué sí o por qué no?
+    **Sí, cambiaría.**
+
+Si la definición cambia a `class Pasante(Trabajador, Estudiante):`, el MRO pasa a ser:
+
+`Pasante -> Trabajador -> Estudiante -> Persona -> object`
+3. ****kwargs**  
+    ¿Qué pasaría si en la clase Pasante olvidáramos poner **kwargs en alguna de las clases intermedias (Estudiante o Trabajador)? 
+    Si elimináramos `**kwargs` (por ejemplo, en `Estudiante`):
+TypeError: __init__() got an unexpected keyword argument...
+    
+    Ocurriría al invocar `Pasante(...)`. `Pasante` pasaría los argumentos `empresa`, `salario`, `nombre` y `edad` a `Estudiante.__init__()`. Al no tener `**kwargs` en su firma ni parámetros explícitos para ellos, Python lanzaría este error por recibir argumentos inesperados.
+    
+ **Si se adaptara la llamada para no pasar esos argumentos a `Estudiante`:**
+    
+    La cadena del MRO se rompería. Los argumentos requeridos por `Trabajador` y `Persona` no se propagarían mediante `super()`, lanzando errores por falta de argumentos obligatorios al llegar a esas clases (`TypeError: __init__() missing required argument...`).
+
