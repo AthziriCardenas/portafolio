@@ -1,0 +1,173 @@
+enlace para verlo funcionar https://www.programiz.com/online-compiler/4etGp2WVQ8Szh
+
+# ==============================================================================
+# SISTEMA DE GESTIÓN DE RESERVAS DE HOTEL
+# Descripción: Sistema para gestionar reservas de estancia en un hotel usando POO.
+# Aplica principios de Encapsulamiento, Herencia y Polimorfismo en Python.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. CLASE BASE (Superclase) - Contiene Avance 1 + Encapsulamiento del Avance 2
+# ------------------------------------------------------------------------------
+class ReservaHotel:
+    """Clase base que representa una reserva estándar en el sistema de hospedaje."""
+
+    def __init__(self, cliente: str, numero_habitacion: int, noches: int, precio_por_noche: float):
+        # Atributos públicos (Del Avance 1)
+        self.cliente = cliente
+        self.numero_habitacion = numero_habitacion
+        
+        # <<< INICIO AVANCE 2: Punto 1 - Encapsulamiento (Atributos Privados y Protegidos) >>>
+        self.__precio_por_noche = 0.0  # Atributo privado con doble guion bajo
+        self._noches = 0               # Atributo protegido con un guion bajo
+        self.pagada = False
+
+        # Asignación segura mediante Getters y Setters
+        self.precio_por_noche = precio_por_noche
+        self.noches = noches
+        # <<< FIN AVANCE 2: Atributos protegidos >>>
+
+    # <<< INICIO AVANCE 2: Punto 1 - Getters y Setters con decoradores @property >>>
+    @property
+    def precio_por_noche(self) -> float:
+        """Getter para consultar el precio por noche de forma segura."""
+        return self.__precio_por_noche
+
+    @precio_por_noche.setter
+    def precio_por_noche(self, valor: float):
+        """Setter con validación para evitar precios negativos o nulos."""
+        if valor > 0:
+            self.__precio_por_noche = valor
+        else:
+            print(f"[ERROR] El precio por noche debe ser mayor a 0. Se conservará el valor previo.")
+
+    @property
+    def noches(self) -> int:
+        """Getter para consultar el número de noches."""
+        return self._noches
+
+    @noches.setter
+    def noches(self, valor: int):
+        """Setter con validación para evitar noches menores o iguales a cero."""
+        if valor > 0:
+            self._noches = valor
+        else:
+            print(f"[ERROR] La estancia debe ser de al menos 1 noche.")
+    # <<< FIN AVANCE 2: Getters y Setters >>>
+
+    # --- Métodos operativos de la Clase Base (Del Avance 1, actualizados con f-strings) ---
+    def calcular_total(self) -> float:
+        """Calcula el costo total de la reserva."""
+        total = self._noches * self.__precio_por_noche
+        print(f"El costo total para {self.cliente} por {self._noches} noches es de ${total:.2f}.")
+        return total
+
+    def extender_estancia(self, noches_extra: int):
+        """Suma noches adicionales a la estancia previa."""
+        if noches_extra > 0:
+            self._noches += noches_extra
+            print(f"Se agregaron {noches_extra} noches a la reserva de {self.cliente}. Estancia total: {self._noches} noches.")
+        else:
+            print("[ERROR] Las noches a extender deben ser mayores a 0.")
+
+    def procesar_pago(self):
+        """Cambia el estado de la reserva a Pagada."""
+        self.pagada = True
+        print(f"El pago de la habitación {self.numero_habitacion} a nombre de {self.cliente} ha sido procesado con éxito.")
+
+    def mostrar_detalle(self):
+        """Muestra los datos básicos de la reserva."""
+        estado = "Pagada" if self.pagada else "Pendiente de pago"
+        print("--- Detalle de Reserva ---")
+        print(f"Huésped: {self.cliente}\nHabitación: {self.numero_habitacion}\nNoches: {self._noches}\nPrecio/Noche: ${self.__precio_por_noche:.2f}\nEstado: {estado}\n")
+
+
+# ==============================================================================
+# <<< INICIO AVANCE 2 COMPLETO: Punto 2 y 3 - Herencia, Subclases y Polimorfismo >>>
+# ==============================================================================
+class ReservaVIP(ReservaHotel):
+    """Subclase que representa una reserva de lujo con beneficios exclusivos."""
+
+    def __init__(self, cliente: str, numero_habitacion: int, noches: int, precio_por_noche: float, servicio_piscina: bool = True, mayordomo_asignado: str = "Sin asignación"):
+        # Uso de super() para reutilizar el constructor de la superclase
+        super().__init__(cliente, numero_habitacion, noches, precio_por_noche)
+        
+        # 2 Atributos nuevos propios de esta subclase (Punto 2 del Avance 2)
+        self.servicio_piscina = servicio_piscina
+        self.mayordomo_asignado = mayordomo_asignado
+
+    # Método propio de la subclase
+    def solicitar_mayordomo(self, nombre_mayordomo: str):
+        """Asigna un mayordomo personalizado al huésped VIP."""
+        self.mayordomo_asignado = nombre_mayordomo
+        print(f"Servicio VIP: El mayordomo {self.mayordomo_asignado} ha sido asignado a {self.cliente}.")
+
+    # Sobrescritura de Método / Override (Polimorfismo - Punto 3 del Avance 2)
+    def calcular_total(self) -> float:
+        """Sobrescribe el cálculo del total aplicando un 10% de descuento VIP."""
+        subtotal = super().calcular_total()
+        descuento = subtotal * 0.10
+        total_vip = subtotal - descuento
+        print(f"¡Beneficio VIP aplicado! Descuento de 10% (${descuento:.2f}). Total final: ${total_vip:.2f}.")
+        return total_vip
+
+    # Sobrescritura de Método / Override (Polimorfismo - Punto 3 del Avance 2)
+    def mostrar_detalle(self):
+        """Sobrescribe el detalle agregando los campos exclusivos VIP."""
+        estado = "Pagada" if self.pagada else "Pendiente de pago"
+        piscina_str = "Incluido" if self.servicio_piscina else "No incluido"
+        print("=== DETALLE DE RESERVA VIP ===")
+        print(f"Huésped VIP: {self.cliente}")
+        print(f"Habitación Suite: {self.numero_habitacion}")
+        print(f"Noches: {self.noches} | Precio/Noche: ${self.precio_por_noche:.2f}")
+        print(f"Acceso a Piscina Privada: {piscina_str}")
+        print(f"Mayordomo: {self.mayordomo_asignado}")
+        print(f"Estado de Pago: {estado}\n")
+# ==============================================================================
+# <<< FIN AVANCE 2: Definición de la Subclase >>>
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+# PRUEBAS E INSTANCIACIÓN (Mejora con pruebas del Avance 2)
+# ------------------------------------------------------------------------------
+if __name__ == "__main__":
+    print("==================================================")
+    print("      DEMOSTRACIÓN DEL SISTEMA DE RESERVAS       ")
+    print("==================================================\n")
+
+    # <<< INICIO AVANCE 2: Punto 4 - Instanciación de Objetos (1 Base y 2 Subclases) >>>
+    reserva_base = ReservaHotel("Andy Biersack", 134, 4, 1200.0)      # Objeto de Clase Base
+    reserva_vip1 = ReservaVIP("James Smith", 230, 7, 1500.0, servicio_piscina=True)   # Objeto 1 Subclase
+    reserva_vip2 = ReservaVIP("Adam Carlsen", 450, 9, 950.0, servicio_piscina=False)  # Objeto 2 Subclase
+
+    # --- 1. Demostración de Encapsulamiento (Getters/Setters y Validaciones) ---
+    print(">>> Pruebas de Encapsulamiento (Avance 2):")
+    print(f"Precio inicial por noche de {reserva_base.cliente}: ${reserva_base.precio_por_noche:.2f}")
+    
+    # Intento de asignación inválida (devuelve error)
+    reserva_base.precio_por_noche = -500.0  
+    
+    # Modificación válida mediante el Setter
+    reserva_base.precio_por_noche = 1350.0
+    print(f"Precio actualizado mediante Setter: ${reserva_base.precio_por_noche:.2f}\n")
+
+    # --- 2. Demostración de Herencia, Polimorfismo y Métodos Propios ---
+    print(">>> Pruebas con la Reserva Base (Superclase):")
+    reserva_base.extender_estancia(2)
+    reserva_base.calcular_total()
+    reserva_base.procesar_pago()
+    reserva_base.mostrar_detalle()
+
+    print(">>> Pruebas con Reservas VIP (Subclase - Avance 2):")
+    # Uso del método único de la subclase
+    reserva_vip1.solicitar_mayordomo("Carlos")
+    # Método calcular_total sobrescrito (Polimorfismo con descuento del 10%)
+    reserva_vip1.calcular_total()
+    reserva_vip1.procesar_pago()
+    reserva_vip1.mostrar_detalle()
+
+    # Demostración de independencia de datos entre instancias
+    reserva_vip2.mostrar_detalle()
+    # <<< FIN AVANCE 2: Pruebas >>>
+
