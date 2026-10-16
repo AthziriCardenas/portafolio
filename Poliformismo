@@ -1,0 +1,25 @@
+Es cuando diferentes objetos utilizan el
+mismo método, pero cada uno realiza
+una acción diferente.
+
+Mismo método → difere
+class WhatsApp:
+def notificar(self):
+
+print("🔔 Nuevo mensaje de WhatsApp
+")
+class Instagram:
+def notificar(self):
+print("❤️ Tienes un nuevo like
+")nte comportamiento
+apps = [WhatsApp(), Instagram()]
+
+for app in apps:
+app.notificar()
+A) Nuevo mensaje / Nuevo mensaje
+
+B) Nuevo like / Nuevo like
+
+C) Nuevo mensaje de WhatsApp / Tienes un nuevo like
+
+D) Error
